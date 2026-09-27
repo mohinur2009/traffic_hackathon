@@ -95,6 +95,7 @@ class RiskEstimator:
         self.raw_hist = deque()
         self.score = 0.0
         self.why = None                                 # reason for the latest score (for demos)
+        self.objs = []
 
     def step(self, frame: np.ndarray, t_sec: float) -> float:
         self.n += 1
@@ -103,6 +104,7 @@ class RiskEstimator:
         res = self.model.track(frame, persist=True, tracker="bytetrack.yaml", imgsz=self.IMGSZ,
                                classes=self.KEEP, conf=self.CONF, verbose=False)[0]
         objs = self._objects(res, t_sec)
+        self.objs = objs                                # latest road users (Part A reuses them)
         raw = self._raw_risk(objs, t_sec)
         self.raw_hist.append((t_sec, raw))
         while self.raw_hist and self.raw_hist[0][0] < t_sec - self.SMOOTH_S:
