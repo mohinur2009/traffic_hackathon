@@ -68,36 +68,9 @@ def detect_events(video_path: str) -> list[list]:
     return []
 
 
-class RiskEstimator:
-    """Part B — causal accident anticipation (optional, bonus).
+# Part B lives in src/risk.py (causal TTC-based risk estimator).
+import sys  # noqa: E402
+from pathlib import Path  # noqa: E402
 
-    The harness calls ``reset(meta)`` once per video and then ``step`` for
-    EVERY frame, in order. ``step`` must use only the frames it has seen so
-    far: do not open the video file inside this class, and do not reuse
-    Part A results that were computed with access to future frames.
-    """
-
-    def reset(self, meta: dict) -> None:
-        """Called once before the first frame of each video.
-
-        meta = {"video_id": str, "fps": float, "width": int, "height": int,
-                "n_frames": int}
-        """
-        self.meta = meta
-        self.last_score = 0.0
-
-    def step(self, frame: np.ndarray, t_sec: float) -> float:
-        """Return P(accident starts within the next RISK_HORIZON_SEC s).
-
-        Args:
-            frame: BGR uint8 array of shape (H, W, 3) — OpenCV convention.
-            t_sec: timestamp of this frame in seconds.
-
-        Returns:
-            A float in [0, 1]. Skipping frames internally and returning the
-            previous score is fine; the harness still expects a value for
-            every call.
-        """
-        # TODO: replace this stub. A simple strong baseline: track vehicles,
-        # estimate time-to-collision between pairs, map min TTC -> risk.
-        return self.last_score
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from src.risk import RiskEstimator  # noqa: E402,F401
