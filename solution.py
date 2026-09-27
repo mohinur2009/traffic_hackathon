@@ -14,7 +14,12 @@ do not add new ids.
 """
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
 import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))   # so "src" can be imported
 
 # Official class ids (14). See the task description for definitions and
 # start/end conventions. Remove entries you never predict; never add.
@@ -64,13 +69,9 @@ def detect_events(video_path: str) -> list[list]:
         5. optionally re-score `accident` / `near_miss` candidates with a
            learned clip classifier.
     """
-    # TODO: replace this stub with your pipeline.
-    return []
+    from src.events import detect_events as _detect   # rule-based, reuses src/risk.py
+    return _detect(video_path)
 
 
 # Part B lives in src/risk.py (causal TTC-based risk estimator).
-import sys  # noqa: E402
-from pathlib import Path  # noqa: E402
-
-sys.path.insert(0, str(Path(__file__).resolve().parent))
 from src.risk import RiskEstimator  # noqa: E402,F401
